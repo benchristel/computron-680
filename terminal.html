@@ -44,10 +44,7 @@
 
   <body>
     <div id="terminal">
-      <p id="0">
-        If you're seeing this, check your javascript console for errors, or try
-        the latest version of Google Chrome.
-      </p>
+      <p id="0"></p>
       <p id="1"></p>
       <p id="2"></p>
       <p id="3"></p>
@@ -92,255 +89,20 @@
 
     <textarea id="code-to-eval">
 
- // --- kernel ---------------------------------------------
+function splashScreen() {
+  return [
+    " ____            _  ____   _____ ",
+    "|  _ \\          | |/ __ \\ / ____|",
+    "| |_) | __ _  __| | |  | | (___  ",
+    "|  _ < / _` |/ _` | |  | |\\___ \\ ",
+    "| |_) | (_| | (_| | |__| |____) |",
+    "|____/ \\__,_|\\__,_|\\____/|_____/ ",
+    "================================================================================",
+    "Starting up..."
+  ]
+}
 
- // initial state
- var state = {
-   render: splashScreen,
-   tick: tickOnSplashScreen,
-
-   countdown: 15,
- }
-
- function debugState(state) {
-   var output = ''
-   forEachOwnPropertyOf(state, (key, val) => {
-     output += key + ': (' + (typeof val) + ') ' + val + '\n'
-   })
-   return output
- }
-
- function doEvent(handler, arg) {
-   state = handler(state, arg)
-   document.getElementById('state').innerText = debugState(state)
-   printScreen(state.render(state))
- }
-
- doEvent(identity)
-
- var tickInterval = null
- function setTickInterval() {
-   window.clearInterval(tickInterval)
-   tickInterval = window.setInterval(function() {
-     // keyboard repeat
-     if (keyHeldDuration > 0) {
-       if (keyHeldDuration > 4 && typeof state.keyRepeat === 'function') {
-         doEvent(state.keyRepeat, lastPressedKey)
-       }
-
-       keyHeldDuration++
-     }
-
-     if (typeof state.tick === 'function') {
-       doEvent(state.tick)
-     }
-   }, 40) // 25 fps
- }
-
- setTickInterval()
-
- var pressedKeys = {}
- var keyHeldDuration = 0
- var lastPressedKey = null
-
- window.addEventListener('keydown', function(event) {
-   event.preventDefault()
-   var key = lastPressedKey = event.key
-
-   if (typeof state.keyPress === 'function'
-       && !pressedKeys[key]) {
-
-     pressedKeys[key] = true
-     keyHeldDuration = 1
-     doEvent(state.keyPress, key)
-     setTickInterval()
-   }
- })
-
- window.addEventListener('keyup', function(event) {
-   event.preventDefault()
-   keyHeldDuration = 0
-   pressedKeys[event.key] = false
-   setTickInterval()
- })
-
- // --- events ---------------------------------------------
-
- function prompt() {
-   return {
-     render: promptScreen,
-     tick: blinkCursor,
-     keyPress: typeChar,
-     keyRepeat: typeChar,
-
-     typed: '',
-     cursor: '_'
-   }
- }
-
- var CURSOR_BLINK_INTERVAL = 8
-
- function blinkCursor(state) {
-   var countdown = number(state.ticksUntilNextCursorBlink)
-
-   return merge(state, {
-     ticksUntilNextCursorBlink:
-       countdown === 0
-       ? CURSOR_BLINK_INTERVAL
-       : countdown - 1,
-
-     cursor:
-       countdown === 0
-       ? (
-         state.cursor === '_'
-         ? ''
-         : '_'
-       )
-       : state.cursor
-   })
- }
-
- function typeChar(state, char) {
-   if (char.length === 1) {
-     return merge(state, {
-       typed: state.typed + char,
-       cursor: '_',
-       ticksUntilNextCursorBlink: CURSOR_BLINK_INTERVAL
-     })
-   }
-
-   switch (char) {
-     case 'Backspace':
-       return merge(state, {
-         typed: state.typed.slice(0, state.typed.length - 1),
-         cursor: '_',
-         ticksUntilNextCursorBlink: CURSOR_BLINK_INTERVAL
-       })
-     case 'Enter': {
-       return evalEnteredCode(state)
-     }
-     default: {
-       return state
-     }
-   }
- }
-
- function evalEnteredCode(state) {
-   var result
-   try {
-     result = NotEvil.eval(state.typed)
-   } catch (e) {
-     result = e
-   }
-
-   return {
-     render: resultScreen,
-     result: result,
-     keyPress: function(state, char) {
-       return char === 'q' ? beginShutdown()
-         : prompt()
-     }
-   }
- }
-
- function tickOnSplashScreen(state) {
-   if (state.countdown === 0) {
-     return prompt()
-   } else {
-     return merge(state, {
-       countdown: state.countdown - 1
-     })
-   }
- }
-
- function beginShutdown(state) {
-   return {
-     render: goodbyeScreen,
-     countdown: 15,
-     tick: function(state) {
-       if (state.countdown > 0) {
-         return merge(state, {countdown: state.countdown - 1})
-       } else {
-         return turnOff()
-       }
-     }
-   }
- }
-
- function turnOff(state) {
-   return {
-     render: function() {
-       return []
-     }
-   }
- }
-
- // --- renderers ------------------------------------------
-
- function splashScreen(state) {
-   return [
-     " ____            _  ____   _____ ",
-     "|  _ \\          | |/ __ \\ / ____|",
-     "| |_) | __ _  __| | |  | | (___  ",
-     "|  _ < / _` |/ _` | |  | |\\___ \\ ",
-     "| |_) | (_| | (_| | |__| |____) |",
-     "|____/ \\__,_|\\__,_|\\____/|_____/ ",
-     "================================================================================",
-     "Starting up..."
-   ]
- }
-
- function promptScreen(state) {
-   return ['Enter code to run: ' + state.typed + state.cursor]
- }
-
- function resultScreen(state) {
-   return [
-     state.result.toString(),
-     'Press (q) to quit, or any other key to continue.'
-   ]
- }
-
- function goodbyeScreen(state) {
-   return ['Shutting down in ' + Math.floor(state.countdown / 4)]
- }
-
- // --- utility functions -------------------------------------------------------
-
- function identity(x) {
-   return x
- }
-
- function forEachOwnPropertyOf(obj, fn) {
-   for (var prop in obj) {
-     if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-       fn(prop, obj[prop])
-     }
-   }
- }
-
- function merge(obj1, obj2) {
-   var merged = {}
-
-   forEachOwnPropertyOf(obj1, (key, val) => {
-     merged[key] = val
-   })
-
-   forEachOwnPropertyOf(obj2, (key, val) => {
-     merged[key] = val
-   })
-
-   return merged
- }
-
- /* Coerces the given thing to a number.
-  * If it's NaN, returns 0 instead.
-  */
- function number(thing) {
-   var n = +thing
-   // n !== n iff it's NaN
-   return (n !== n) ? 0 : n
- }
+render(splashScreen())
 
     </textarea>
     <button id="run">RUN THA CODE</button>

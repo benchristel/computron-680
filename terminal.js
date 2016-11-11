@@ -1,11 +1,13 @@
 window.addEventListener('load', function() {
-  var scriptRunner = document.getElementById('script-runner');
+  var scriptRunner = document.getElementById('script-runner')
   var resultOutput = document.getElementById('state')
   var runButton = document.getElementById('run')
   var codeInput = document.getElementById('code-to-eval')
+  var terminalLines = document.querySelectorAll('#terminal p')
 
   onMessage(function(message) {
-    resultOutput.innerText = message.result
+    console.log('received message', message)
+    render(message.lines)
   })
 
   runButton
@@ -26,5 +28,11 @@ window.addEventListener('load', function() {
         callback(event.data)
       }
     })
+  }
+
+  function render(lines) {
+    for (var i = 0; i < terminalLines.length; i++) {
+      terminalLines[i].innerText = lines[i] || ''
+    }
   }
 })

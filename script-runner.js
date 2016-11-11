@@ -4,10 +4,12 @@ window.addEventListener('message', function(event) {
 
   if (event.origin === BadOSExtensionOrigin) {
     var result = eval(event.data.script)
-    event.source.postMessage({
-      result: result
-    }, BadOSExtensionOrigin)
+
+    function render(lines) {
+      console.log('called render')
+      event.source.postMessage({
+        lines: lines
+      }, BadOSExtensionOrigin)
+    }
   }
-
-
 })
