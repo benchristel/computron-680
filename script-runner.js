@@ -1,36 +1,48 @@
 "use strict";
 
-window.addEventListener('message', function(event) {
-  var BadOSExtensionOrigin =
-    'chrome-extension://behahjpncgjkcbcnkngledgbikppjbhi'
+var BadOSExtensionOrigin =
+  'chrome-extension://behahjpncgjkcbcnkngledgbikppjbhi'
 
+var __scriptRunnerUtil__ = {}
+
+__scriptRunnerUtil__.boot = function(event) {
   if (event.origin === BadOSExtensionOrigin) {
     var varsToCloak = [
-      'event',
+      'window',
       'BadOSExtensionOrigin',
-      'varsToCloak',
-      'result',
-      '__scriptRunnerUtil__'
-    ]
-    var result = eval(__scriptRunnerUtil__.cloakVars(event.data.script, varsToCloak))
+      '__scriptRunnerUtil__',
+      'event',
+      'varsToCloak'
+    ].concat(Object.keys(window))
 
+    // render is intentionally exposed to the eval'd script.
+    // don't cloak it!
     function render(lines) {
       console.log('called render')
       event.source.postMessage({
         lines: lines
       }, BadOSExtensionOrigin)
     }
+
+    // onMessage is intentionally exposed to the eval'd script.
+    // don't cloak it!
+    function onMessage(callback) {
+      window.addEventListener('message', callback)
+    }
+
+    eval(__scriptRunnerUtil__.cloakVars(event.data.script, varsToCloak))
+
+    // ensure we only boot once
+    window.removeEventListener('message', __scriptRunnerUtil__.boot)
   }
-})
+}
 
-var __scriptRunnerUtil__ = {}
+window.addEventListener('message', __scriptRunnerUtil__.boot)
 
-__scriptRunnerUtil__.cloakVars = function(script, extraVars) {
+__scriptRunnerUtil__.cloakVars = function(script, vars) {
   var iife = __scriptRunnerUtil__.iife
   var defineAsUndefined = __scriptRunnerUtil__.defineAsUndefined
-  var cloak = extraVars
-    .concat(Object.keys(window))
-    .concat(['window'])
+  var cloak = vars
     .map(defineAsUndefined)
     .join('')
 

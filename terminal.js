@@ -10,13 +10,16 @@ window.addEventListener('load', function() {
     render(message.lines)
   })
 
-  runButton
-    .addEventListener('click', function() {
-      var code = codeInput.value
-      scriptRunner.contentWindow.postMessage({
-        script: code
-      }, '*')
-    })
+  runButton.addEventListener('click', function() {
+    var code = codeInput.value
+    scriptRunner.contentWindow.postMessage({
+      script: code
+    }, '*')
+  })
+
+  window.addEventListener('keypress', function(event) {
+    scriptRunner.contentWindow.postMessage(event.key, '*')
+  })
 
   function onMessage(callback) {
     window.addEventListener('message', function(event) {

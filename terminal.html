@@ -104,6 +104,10 @@ function splashScreen() {
 
 render(splashScreen())
 
+onMessage(function(event) {
+  render(['key pressed: ' + event.data])
+})
+
     </textarea>
     <button id="run">RUN THA CODE</button>
   </body>
