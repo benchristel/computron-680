@@ -1,5 +1,5 @@
 window.addEventListener('load', function() {
-  var scriptRunner = document.getElementById('script-runner')
+  var motherboard = document.getElementById('motherboard')
   var resultOutput = document.getElementById('state')
   var runButton = document.getElementById('run')
   var codeInput = document.getElementById('code-to-eval')
@@ -12,22 +12,22 @@ window.addEventListener('load', function() {
 
   runButton.addEventListener('click', function() {
     var code = codeInput.value
-    scriptRunner.contentWindow.postMessage({
+    motherboard.contentWindow.postMessage({
       script: code
     }, '*')
   })
 
   window.addEventListener('keypress', function(event) {
-    scriptRunner.contentWindow.postMessage(event.key, '*')
+    motherboard.contentWindow.postMessage(event.key, '*')
   })
 
   function onMessage(callback) {
     window.addEventListener('message', function(event) {
-      // To avoid a security hole, we always check the origin
+      // To avoid a security hole, we always check the source
       // of the event before reacting. Malicious pages can
       // send events to any window at any time!
       // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
-      if (event.source === scriptRunner.contentWindow) {
+      if (event.source === motherboard.contentWindow) {
         callback(event.data)
       }
     })
