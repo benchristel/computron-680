@@ -6,6 +6,8 @@ var BadOSExtensionOrigin =
 var __scriptRunnerUtil__ = {}
 
 __scriptRunnerUtil__.boot = function(event) {
+  if (!event.data.script) return
+
   if (event.origin === BadOSExtensionOrigin) {
     var varsToCloak = [
       'window',
