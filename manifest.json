@@ -7,22 +7,17 @@
     "128": "icon_128.png"
   },
 
-  "background": {
-    "page": "browserActionClickHandler.html"
-  },
-
-  "browser_action": {
-    "default_icon" : "icon_128.png",
-    "default_title": "Launch BadOS"
+  "app": {
+    "background": {
+      "scripts": [ "launch.js" ]
+    }
   },
 
   "permissions": [
-    "tabs"
+    "fileSystem"
   ],
 
   "sandbox": {
     "pages": ["motherboard.html"]
-  },
-
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  }
 }
