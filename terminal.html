@@ -3,43 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Working Title</title>
-    <style type="text/css">
-      body {
-        margin: 0;
-        padding: 10px;
-        background-color: black;
-        color: goldenrod;
-      }
-
-      #terminal > p {
-        margin: 0;
-        padding: 0;
-        height: 16px;
-
-        font-family: Menlo, Monaco, monospace;
-        font-size: 16px;
-        white-space: pre;
-      }
-
-      iframe {
-        display: none;
-      }
-
-      textarea {
-        width: 60em;
-        height: 400px;
-        font-family: monospace;
-      }
-
-      button {
-        background-color: red;
-        color: white;
-        border: 3px solid #800;
-        border-radius: 5px;
-        padding: 10px;
-        font-size: 20px;
-      }
-    </style>
+    <link rel="stylesheet" href="terminal.css" />
   </head>
 
   <body>
@@ -86,29 +50,6 @@
     <iframe id="motherboard" src="motherboard.html"></iframe>
 
     <script type="text/javascript" src="terminal.js"></script>
-
-    <textarea id="code-to-eval">
-
-function splashScreen() {
-  return [
-    " ____            _  ____   _____ ",
-    "|  _ \\          | |/ __ \\ / ____|",
-    "| |_) | __ _  __| | |  | | (___  ",
-    "|  _ < / _` |/ _` | |  | |\\___ \\ ",
-    "| |_) | (_| | (_| | |__| |____) |",
-    "|____/ \\__,_|\\__,_|\\____/|_____/ ",
-    "================================================================================",
-    "Starting up..."
-  ]
-}
-
-render(splashScreen())
-
-onMessage(function(event) {
-  render(['key pressed: ' + event.data])
-})
-
-    </textarea>
-    <button id="run">RUN THA CODE</button>
+    <script type="text/javascript" src="bootFromDisk.js"></script>
   </body>
 </html>

@@ -14,7 +14,8 @@
   },
 
   "permissions": [
-    "fileSystem"
+    "fileSystem",
+    "fileSystem.directory"
   ],
 
   "sandbox": {
