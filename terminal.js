@@ -3,12 +3,7 @@ window.addEventListener('load', function() {
   var terminalLines = document.querySelectorAll('#terminal p')
 
   onMessage(function(message) {
-    console.log('received message', message)
     render(message.lines)
-  })
-
-  window.addEventListener('keypress', function(event) {
-    motherboard.contentWindow.postMessage(event.key, '*')
   })
 
   function onMessage(callback) {
