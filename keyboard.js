@@ -1,5 +1,8 @@
 window.addEventListener('load', function() {
-  window.addEventListener('keypress', function(event) {
-    motherboard.contentWindow.postMessage(event.key, '*')
+  window.addEventListener('keydown', function(event) {
+    motherboard.contentWindow.postMessage({
+      type: 'keydown',
+      key: event.key
+    }, '*')
   })
 })

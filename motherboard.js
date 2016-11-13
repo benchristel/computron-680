@@ -3,9 +3,7 @@
 var __scriptRunnerUtil__ = {}
 
 __scriptRunnerUtil__.boot = function(event) {
-  console.log(event)
-  if (!event.data.script) return
-  console.log(event.origin)
+  if (event.data.type !== 'boot') return
 
   var varsToCloak = [
     'window',
@@ -14,20 +12,8 @@ __scriptRunnerUtil__.boot = function(event) {
     'varsToCloak'
   ].concat(Object.keys(window))
 
-  // render is intentionally exposed to the eval'd script.
-  // don't cloak it!
-  function render(lines) {
-    console.log('called render')
-    event.source.postMessage({
-      lines: lines
-    }, '*')
-  }
-
-  // onMessage is intentionally exposed to the eval'd script.
-  // don't cloak it!
-  function onMessage(callback) {
-    window.addEventListener('message', callback)
-  }
+  // intentionally exposed to the eval'd script.
+  var C680 = API(event.source)
 
   eval(__scriptRunnerUtil__.cloakVars(event.data.script, varsToCloak))
 
