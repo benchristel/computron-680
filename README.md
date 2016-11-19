@@ -2,9 +2,12 @@
 
 The Computron 680 is a virtual machine that runs as a Chrome app.
 
-It `eval`s JavaScript that you feed into it,
-displays text on a terminal UI,
-and responds to keyboard input.
+Its features include:
+
+- An intuitive, text-based display that allows you to view information using the Latin alphabet you already know and love.
+- Integration with modern input devices such as the QWERTY keyboard.
+- Native execution of the JavaScript instruction set.
+- Full support for any supported host operating system.
 
 ## What? How is this different from a webpage?
 
