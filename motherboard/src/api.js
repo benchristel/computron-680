@@ -1,22 +1,52 @@
 // this file contains the API functions that are exposed to boot.js.
 
-API = function(peripherals) {
-  var api = {}
-  var fileCallbacks = {}
+inject('peripherals', function() {
+  return 'todo'
+})
 
-  api.render = function(lines) {
+inject('window', function() {
+  return 'todo'
+})
+
+inject('API', ({window}) => (peripherals) => {
+  var fileCallbacks = {}
+  var keypressCallback = function() {}
+
+  var api = {
+    render,
+    setInterval,
+    log,
+    onKeyPress,
+    readFile,
+    writeFile,
+  }
+
+  Object.freeze(api)
+
+  return api
+
+  // --- public API implementation ------------------------
+
+  function render(lines) {
     peripherals.postMessage({
       type: 'render',
       lines: lines
     }, '*')
   }
 
-  api.setInterval = window.setInterval.bind(window)
-  api.console     = window.console
+  function setInterval(cb, timeout) {
+    window.setInterval(cb, timeout)
+  }
 
-  api.onKeyPress = function() {}
+  function log(...args) {
+    console.log(...args)
+  }
 
-  api.readFile = function(filename, callback) {
+  function onKeyPress(cb) {
+    keypressCallback = cb
+  }
+
+  function readFile(filename, callback) {
     peripherals.postMessage({
       type: 'readFile',
       filename: filename
@@ -25,7 +55,7 @@ API = function(peripherals) {
     fileCallbacks[filename] = callback
   }
 
-  api.writeFile = function(filename, content) {
+  function writeFile(filename, content) {
     console.log('api writing file', filename, content)
     peripherals.postMessage({
       type: 'writeFile',
@@ -33,6 +63,8 @@ API = function(peripherals) {
       content: content
     }, '*')
   }
+
+  // --- private methods ----------------------------------
 
   function handleKeyPress(event) {
     if (api.onKeyPress) api.onKeyPress(event.data.key)
@@ -56,6 +88,4 @@ API = function(peripherals) {
         break
     }
   })
-
-  return api
-}
+})
