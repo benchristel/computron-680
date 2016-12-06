@@ -3,7 +3,7 @@ inject('ExecuteJavaScriptMessage', () => {
     assertString(script, 'ExecuteJavaScriptMessage must be constructed with a string')
 
     return {
-      type: 'executeJavaScript',
+      messageType: 'executeJavaScript',
       script
     }
   }
@@ -11,7 +11,7 @@ inject('ExecuteJavaScriptMessage', () => {
   ExecuteJavaScriptMessage.is = function(thing) {
     return !!(
       thing
-      && 'executeJavaScript' === thing.type
+      && 'executeJavaScript' === thing.messageType
       && isString(thing.script)
     )
   }

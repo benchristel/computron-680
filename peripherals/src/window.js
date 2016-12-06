@@ -1,0 +1,3 @@
+inject('window', () => {
+  return window
+})

@@ -1,4 +1,8 @@
+#!/bin/bash
+
 set -e # exit immediately on error
+
+source 'functions.sh'
 
 test() {
   local dir="$1"
@@ -9,8 +13,8 @@ test() {
   cat \
     lib/poppins.js \
     lib/injector.js \
-    $(find "$dir/src"  -name '*.js') \
-    $(find "$dir/spec" -name '*.js') \
+    $(unique-source-files "$dir") \
+    $(spec-files "$dir") \
     > "$dir/.build_tmp/spec.js"
 
   jasmine "$dir/.build_tmp/spec.js"
@@ -20,3 +24,4 @@ test() {
 
 test peripherals
 test motherboard
+test shared

@@ -163,63 +163,21 @@ inject = Poppins()
  * a boot.js file.
  */
 
-inject('bios', ({bus, hdd}) => {
+inject('bios', ({
+  peripheralsBus,
+  hdd,
+  ExecuteJavaScriptMessage
+}) => {
   return {
     boot
   }
 
   function boot() {
-    hdd.readFile('boot.js', bus.executeJavaScript)
+    hdd.readFile('boot.js', contents => {
+      const msg = ExecuteJavaScriptMessage(contents)
+      peripheralsBus.publish(msg)
+    })
   }
-})
-inject('executeJavaScript', ({sendToMotherboard, ExecuteJavaScriptMessage}) => {
-  return function(script) {
-    sendToMotherboard(ExecuteJavaScriptMessage(script))
-  }
-})
-inject('ExecuteJavaScriptMessage', () => {
-  let ExecuteJavaScriptMessage = function(script) {
-    assertString(script, 'ExecuteJavaScriptMessage must be constructed with a string')
-
-    return {
-      type: 'executeJavaScript',
-      script
-    }
-  }
-
-  ExecuteJavaScriptMessage.is = function(thing) {
-    return !!(
-      thing
-      && 'executeJavaScript' === thing.type
-      && isString(thing.script)
-    )
-  }
-
-  return ExecuteJavaScriptMessage
-
-  // --- private methods ----------------------------------
-
-  function assertString(thing, message) {
-    if (!isString(thing)) {
-      throw new Error(message)
-    }
-  }
-
-  function isString(thing) {
-    return typeof thing === 'string'
-  }
-})
-inject('sendToMotherboard', ({motherboard}) => {
-  return function(message) {
-    motherboard.contentWindow.postMessage(message, '*')
-  }
-})
-inject('bus', ({executeJavaScript}) => {
-  let bus = {
-    executeJavaScript,
-  }
-
-  return bus
 })
 /* there are no tests for `document`, since tests need to run in Node */
 inject('document', () => {
@@ -284,6 +242,9 @@ inject('hdd', () => {
 inject('motherboard', ({document}) => {
   return document.getElementById('motherboard')
 })
+inject('peripheralsBus', ({Bus, window, motherboard}) => {
+  return Bus(window, motherboard.contentWindow)
+})
 inject('terminal', ({terminalDomElements}) => {
   return {
     render
@@ -298,15 +259,80 @@ inject('terminal', ({terminalDomElements}) => {
 inject('terminalDomElements', ({document}) => {
   return document.querySelectorAll('#terminal p')
 })
+inject('window', () => {
+  return window
+})
+inject('Bus', () => (thisWindow, otherWindow) => {
+  const subscriptions = []
+
+  thisWindow.addEventListener('message', event => {
+    broadcastToSubscribers(event.data)
+  })
+
+  return {
+    publish,
+    subscribe
+  }
+
+  function publish(message) {
+    broadcastToSubscribers(message)
+
+    otherWindow.postMessage(message, '*')
+  }
+
+  function subscribe(messageType, callback) {
+    subscriptions.push({messageType, callback})
+  }
+
+  function broadcastToSubscribers(message) {
+    subscriptions
+      .filter(sub => sub.messageType === message.messageType)
+      .forEach(subscription => {
+        subscription.callback(message)
+      })
+
+  }
+})
+inject('ExecuteJavaScriptMessage', () => {
+  let ExecuteJavaScriptMessage = function(script) {
+    assertString(script, 'ExecuteJavaScriptMessage must be constructed with a string')
+
+    return {
+      messageType: 'executeJavaScript',
+      script
+    }
+  }
+
+  ExecuteJavaScriptMessage.is = function(thing) {
+    return !!(
+      thing
+      && 'executeJavaScript' === thing.messageType
+      && isString(thing.script)
+    )
+  }
+
+  return ExecuteJavaScriptMessage
+
+  // --- private methods ----------------------------------
+
+  function assertString(thing, message) {
+    if (!isString(thing)) {
+      throw new Error(message)
+    }
+  }
+
+  function isString(thing) {
+    return typeof thing === 'string'
+  }
+})
 describe('bios', function() {
   it('reads from a boot.js file on boot', function() {
-    let bus = {
-      executeJavaScript: function() {}
+    let peripheralsBus = {
     }
     let hdd = {
       readFile: jasmine.createSpy('hdd.readFile')
     }
-    let {bios} = inject({bus, hdd})
+    let {bios} = inject({peripheralsBus, hdd})
 
     bios.boot()
 
@@ -314,87 +340,27 @@ describe('bios', function() {
   })
 
   it('executes the boot.js file when it loads', function() {
-    let bus = {
-      executeJavaScript: jasmine.createSpy('bus.executeJavaScript')
+    const peripheralsBus = {
+      publish: jasmine.createSpy('peripheralsBus.publish')
     }
-    let hdd = {
+
+    const hdd = {
       readFile: function(filename, callback) {
         callback('file contents')
       }
     }
-    let {bios} = inject({bus, hdd})
+
+    const {
+      bios,
+      ExecuteJavaScriptMessage
+    } = inject({peripheralsBus, hdd})
 
     bios.boot()
 
-    expect(bus.executeJavaScript).toHaveBeenCalledWith('file contents')
-  })
-})
-describe('ExecuteJavaScriptMessage', () => {
-  it('contains a script string', () => {
-    let {ExecuteJavaScriptMessage} = inject()
-    let message = ExecuteJavaScriptMessage('a script')
-    expect(message.script).toBe('a script')
-  })
-
-  it('does not allow the script to be something other than a string', () => {
-    let {ExecuteJavaScriptMessage} = inject()
-    expect(() => {
-      ExecuteJavaScriptMessage({})
-    }).toThrowError('ExecuteJavaScriptMessage must be constructed with a string')
-  })
-
-  it('recognizes messages', () => {
-    let {ExecuteJavaScriptMessage} = inject()
-    let message = ExecuteJavaScriptMessage('something')
-    expect(ExecuteJavaScriptMessage.is(message)).toBe(true)
-  })
-
-  it('does not recognize an object with only a script property', () => {
-    let {ExecuteJavaScriptMessage} = inject()
-    expect(ExecuteJavaScriptMessage.is({script: 'a'})).toBe(false)
-  })
-
-  it('does not recognize an object with only a type property', () => {
-    let {ExecuteJavaScriptMessage} = inject()
-    expect(ExecuteJavaScriptMessage.is({type: 'executeJavaScript'})).toBe(false)
-  })
-
-  it('does not recognize null', () => {
-    let {ExecuteJavaScriptMessage} = inject()
-    expect(ExecuteJavaScriptMessage.is(null)).toBe(false)
-  })
-})
-describe('executeJavaScript', () => {
-  it('sends a message to the motherboard iframe', function() {
-    let sendToMotherboard = jasmine.createSpy('sendToMotherboard')
-    let {executeJavaScript, ExecuteJavaScriptMessage} = inject({sendToMotherboard})
-
-    executeJavaScript('some javascript')
-
-    expect(sendToMotherboard).toHaveBeenCalledWith(jasmine.any(Object))
-    let message = sendToMotherboard.calls.mostRecent().args[0]
-    expect(ExecuteJavaScriptMessage.is(message)).toBe(true)
-    expect(message.script).toBe('some javascript')
-  })
-})
-describe('sendToMotherboard', function() {
-  it("posts a JSONifiable message to the motherboard iframe's window", () => {
-    let motherboard = {
-      contentWindow: {
-        postMessage: jasmine.createSpy('motherboard.contentWindow.postMessage')
-      }
-    }
-    let {sendToMotherboard} = inject({motherboard})
-
-    sendToMotherboard('a message')
-
-    expect(motherboard.contentWindow.postMessage).toHaveBeenCalledWith('a message', '*')
-  })
-})
-describe('bus', function() {
-  it('exposes the executeJavaScript method', function() {
-    let {bus, executeJavaScript} = inject({motherboard: {}})
-    expect(bus.executeJavaScript).toBe(executeJavaScript)
+    expect(peripheralsBus.publish).toHaveBeenCalled()
+    const publishedMessage = peripheralsBus.publish.calls.mostRecent().args[0]
+    expect(ExecuteJavaScriptMessage.is(publishedMessage))
+      .toBe(true)
   })
 })
 describe('hdd', function() {

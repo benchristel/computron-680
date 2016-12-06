@@ -163,63 +163,21 @@ inject = Poppins()
  * a boot.js file.
  */
 
-inject('bios', ({bus, hdd}) => {
+inject('bios', ({
+  peripheralsBus,
+  hdd,
+  ExecuteJavaScriptMessage
+}) => {
   return {
     boot
   }
 
   function boot() {
-    hdd.readFile('boot.js', bus.executeJavaScript)
+    hdd.readFile('boot.js', contents => {
+      const msg = ExecuteJavaScriptMessage(contents)
+      peripheralsBus.publish(msg)
+    })
   }
-})
-inject('executeJavaScript', ({sendToMotherboard, ExecuteJavaScriptMessage}) => {
-  return function(script) {
-    sendToMotherboard(ExecuteJavaScriptMessage(script))
-  }
-})
-inject('ExecuteJavaScriptMessage', () => {
-  let ExecuteJavaScriptMessage = function(script) {
-    assertString(script, 'ExecuteJavaScriptMessage must be constructed with a string')
-
-    return {
-      type: 'executeJavaScript',
-      script
-    }
-  }
-
-  ExecuteJavaScriptMessage.is = function(thing) {
-    return !!(
-      thing
-      && 'executeJavaScript' === thing.type
-      && isString(thing.script)
-    )
-  }
-
-  return ExecuteJavaScriptMessage
-
-  // --- private methods ----------------------------------
-
-  function assertString(thing, message) {
-    if (!isString(thing)) {
-      throw new Error(message)
-    }
-  }
-
-  function isString(thing) {
-    return typeof thing === 'string'
-  }
-})
-inject('sendToMotherboard', ({motherboard}) => {
-  return function(message) {
-    motherboard.contentWindow.postMessage(message, '*')
-  }
-})
-inject('bus', ({executeJavaScript}) => {
-  let bus = {
-    executeJavaScript,
-  }
-
-  return bus
 })
 /* there are no tests for `document`, since tests need to run in Node */
 inject('document', () => {
@@ -284,6 +242,9 @@ inject('hdd', () => {
 inject('motherboard', ({document}) => {
   return document.getElementById('motherboard')
 })
+inject('peripheralsBus', ({Bus, window, motherboard}) => {
+  return Bus(window, motherboard.contentWindow)
+})
 inject('terminal', ({terminalDomElements}) => {
   return {
     render
@@ -297,4 +258,77 @@ inject('terminal', ({terminalDomElements}) => {
 })
 inject('terminalDomElements', ({document}) => {
   return document.querySelectorAll('#terminal p')
+})
+inject('window', () => {
+  return window
+})
+inject('Bus', () => (thisWindow, otherWindow) => {
+  const subscriptions = []
+
+  thisWindow.addEventListener('message', event => {
+    broadcastToSubscribers(event.data)
+  })
+
+  return {
+    publish,
+    subscribe
+  }
+
+  function publish(message) {
+    broadcastToSubscribers(message)
+
+    otherWindow.postMessage(message, '*')
+  }
+
+  function subscribe(messageType, callback) {
+    subscriptions.push({messageType, callback})
+  }
+
+  function broadcastToSubscribers(message) {
+    subscriptions
+      .filter(sub => sub.messageType === message.messageType)
+      .forEach(subscription => {
+        subscription.callback(message)
+      })
+
+  }
+})
+inject('ExecuteJavaScriptMessage', () => {
+  let ExecuteJavaScriptMessage = function(script) {
+    assertString(script, 'ExecuteJavaScriptMessage must be constructed with a string')
+
+    return {
+      messageType: 'executeJavaScript',
+      script
+    }
+  }
+
+  ExecuteJavaScriptMessage.is = function(thing) {
+    return !!(
+      thing
+      && 'executeJavaScript' === thing.messageType
+      && isString(thing.script)
+    )
+  }
+
+  return ExecuteJavaScriptMessage
+
+  // --- private methods ----------------------------------
+
+  function assertString(thing, message) {
+    if (!isString(thing)) {
+      throw new Error(message)
+    }
+  }
+
+  function isString(thing) {
+    return typeof thing === 'string'
+  }
+})
+window.addEventListener('load', () => {
+
+  let {bios} = inject()
+
+  bios.boot()
+
 })

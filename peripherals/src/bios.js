@@ -5,12 +5,19 @@
  * a boot.js file.
  */
 
-inject('bios', ({bus, hdd}) => {
+inject('bios', ({
+  peripheralsBus,
+  hdd,
+  ExecuteJavaScriptMessage
+}) => {
   return {
     boot
   }
 
   function boot() {
-    hdd.readFile('boot.js', bus.executeJavaScript)
+    hdd.readFile('boot.js', contents => {
+      const msg = ExecuteJavaScriptMessage(contents)
+      peripheralsBus.publish(msg)
+    })
   }
 })

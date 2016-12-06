@@ -247,3 +247,113 @@ inject('API', ({window}) => (peripherals) => {
     }
   })
 })
+inject('scriptRunner', ({API}) => {
+  var __scriptRunnerUtil__ = {}
+
+  __scriptRunnerUtil__.boot = function(event) {
+    console.log(event)
+    // if (event.data.type !== 'boot') return
+
+    var varsToCloak = [
+      'window',
+      'API',
+      '__scriptRunnerUtil__',
+      'event',
+      'varsToCloak'
+    ].concat(Object.keys(window))
+
+    // intentionally exposed to the eval'd script.
+    var C680 = API(event.source)
+
+    eval(__scriptRunnerUtil__.cloakVars(event.data.script, varsToCloak))
+
+    // ensure we only boot once
+    window.removeEventListener('message', __scriptRunnerUtil__.boot)
+  }
+
+  window.addEventListener('message', __scriptRunnerUtil__.boot)
+
+  __scriptRunnerUtil__.cloakVars = function(script, vars) {
+    var iife = __scriptRunnerUtil__.iife
+    var defineAsUndefined = __scriptRunnerUtil__.defineAsUndefined
+    var cloak = vars
+      .map(defineAsUndefined)
+      .join('')
+
+    return iife(cloak + iife(script))
+  }
+
+  __scriptRunnerUtil__.iife = function(script) {
+    return ';(function() {' + script + '})();'
+  }
+
+  __scriptRunnerUtil__.defineAsUndefined = function(varName) {
+    return 'var ' + varName + ' = undefined;'
+  }
+})
+inject('Bus', () => (thisWindow, otherWindow) => {
+  const subscriptions = []
+
+  thisWindow.addEventListener('message', event => {
+    broadcastToSubscribers(event.data)
+  })
+
+  return {
+    publish,
+    subscribe
+  }
+
+  function publish(message) {
+    broadcastToSubscribers(message)
+
+    otherWindow.postMessage(message, '*')
+  }
+
+  function subscribe(messageType, callback) {
+    subscriptions.push({messageType, callback})
+  }
+
+  function broadcastToSubscribers(message) {
+    subscriptions
+      .filter(sub => sub.messageType === message.messageType)
+      .forEach(subscription => {
+        subscription.callback(message)
+      })
+
+  }
+})
+inject('ExecuteJavaScriptMessage', () => {
+  let ExecuteJavaScriptMessage = function(script) {
+    assertString(script, 'ExecuteJavaScriptMessage must be constructed with a string')
+
+    return {
+      messageType: 'executeJavaScript',
+      script
+    }
+  }
+
+  ExecuteJavaScriptMessage.is = function(thing) {
+    return !!(
+      thing
+      && 'executeJavaScript' === thing.messageType
+      && isString(thing.script)
+    )
+  }
+
+  return ExecuteJavaScriptMessage
+
+  // --- private methods ----------------------------------
+
+  function assertString(thing, message) {
+    if (!isString(thing)) {
+      throw new Error(message)
+    }
+  }
+
+  function isString(thing) {
+    return typeof thing === 'string'
+  }
+})
+console.log('hello from motherboard/main.js')
+
+const {scriptRunner} = inject()

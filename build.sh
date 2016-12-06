@@ -2,19 +2,22 @@
 
 set -e # exit immediately on error
 
+source 'functions.sh'
+
 ./test.sh
 
 build-js-for-distribution() {
-  local dir=$1
+  local dir="$1"
 
-  echo "Building JS for $dir..."
+  echo "Building JS for ${dir}..."
 
-  mkdir -p "$dir/dist"
+  mkdir -p "${dir}/dist"
   cat \
     lib/poppins.js \
     lib/injector.js \
-    $(find "$dir/src" -name '*.js') \
-    > "$dir/dist/all.js"
+    $(unique-source-files "$dir") \
+    "${dir}/main.js" \
+    > "${dir}/dist/all.js"
 
   echo "Finished building $dir"
 }
