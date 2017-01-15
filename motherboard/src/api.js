@@ -2,7 +2,7 @@
 
 inject('API', function($) {
   var window = $.window
-  
+
   return function(peripherals) {
     var api = {}
     var fileCallbacks = {}
@@ -29,7 +29,6 @@ inject('API', function($) {
     }
 
     api.writeFile = function(filename, content) {
-      console.log('api writing file', filename, content)
       peripherals.postMessage({
         type: 'writeFile',
         filename: filename,
