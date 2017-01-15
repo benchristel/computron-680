@@ -11,4 +11,6 @@ inject('Terminal', function() {
       terminalLines[i].innerText = makeStringExactlyScreenWidth(64, lines[i])
     }
   }
+
+  return Terminal
 })
