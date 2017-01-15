@@ -2,7 +2,8 @@ body {
   margin: 0;
   padding: 10px;
   background-color: #222;
-  color: goldenrod;
+  color: #00e800;
+  background: linear-gradient(to bottom, #010 0%, #121 100%);
 }
 
 #terminal > p {
