@@ -14,7 +14,9 @@ inject('bus', function($) {
 
     switch (event.data.type) {
       case 'readFile':
-        HDD.read(event.data.filename, function(content) {
+        HDD.read(event.data.filename, function(err, content) {
+          if (err) return // TODO: you can do better than this
+
           event.source.postMessage({
             type: 'fileReadComplete',
             filename: event.data.filename,

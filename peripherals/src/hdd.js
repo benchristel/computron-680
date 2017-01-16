@@ -9,10 +9,14 @@ inject('HDD', function($) {
           var reader = new FileReader()
           reader.onload = function(event) {
             reader.onload = null
-            callback(event.target.result)
+            callback(null, event.target.result)
           }
           reader.readAsText(file)
         })
+      }, function(err) {
+        var msg = 'Could not find file `' + filepath + '`.'
+        console.error(msg)
+        callback(msg, '')
       })
     })
   }
@@ -45,7 +49,10 @@ inject('HDD', function($) {
 
   var filesystemRoot = null
   function connect(callback) {
-    if (filesystemRoot) return callback(filesystemRoot)
+    if (filesystemRoot) {
+      callback(filesystemRoot)
+      return
+    }
 
     chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(dir) {
       filesystemRoot = dir
