@@ -2,6 +2,8 @@
 
 The Computron 680 is a virtual machine that runs as a Chrome app.
 
+![Screenshot of a Computron 680 editing this readme file](https://cdn.rawgit.com/benchristel/computron-680/22b593cf/screenshot.png)
+
 Its features include:
 
 - An intuitive, text-based display that allows you to view information using the Latin alphabet you already know and love.
