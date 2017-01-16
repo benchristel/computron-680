@@ -22,14 +22,15 @@ and you can program it to do just about anything.
 ## Usage
 
 1. Clone this repo.
-1. Install the Chrome app.
+1. Ensure you have [NodeJS](https://nodejs.org/) and [NPM](https://www.npmjs.com/) installed.
+1. `cd` into the repo directory and run `./build.sh`.
+1. Install the Computron 680 Chrome app.
    1. Go to [chrome://extensions](chrome://extensions).
    1. Enable developer mode.
-   1. Click `Load unpacked extension...` and select the repo directory.
-1. Clone the [BadOS repo](https://github.com/benchristel/bad-os).
+   1. Click `Load unpacked extension...` and select the repo folder.
 1. Run the Chrome app by clicking the `Launch` link next to the icon.
 1. The app will prompt you to choose a folder.
-   Choose the `bad-os` repo directory.
+   Choose the `computron-680` repo folder.
    (See the explanation of boot directories below to understand why.)
 
 ## Boot Directories
