@@ -6,7 +6,7 @@ The Computron 680 is a virtual machine that runs as a Chrome app.
 
 ## Why?
 
-As with many of my behaviors, there is no one big reason I'm working on this; rather, there are lots of little reasons.
+There is no one big reason I'm working on this; rather, there are lots of little reasons that add up to a big reason.
 
 - I'm a control freak and long for a programming environment whose every aspect is subject to my [steady needle](https://xkcd.com/378/) and scrutinous gaze.
 - I want to write and run JavaScript on a Chromebook, and a working Computron 680 will make that dream possible. (Why a Chromebook? I'm too cheap to buy a real laptop, but I like the idea of carrying around a programming environment with me because then everyone around me can see how ridiculously productive and antisocial I am.)
