@@ -1,6 +1,6 @@
 # Computron 680
 
-The Computron 680 is a virtual machine that runs as a Chrome app.
+The Computron 680 is a virtual programmable computer, available as a Chrome App.
 
 ![Screenshot of a Computron 680 editing this readme file](https://cdn.rawgit.com/benchristel/computron-680/22b593cf/screenshot.png)
 
