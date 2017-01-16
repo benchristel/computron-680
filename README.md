@@ -4,12 +4,15 @@ The Computron 680 is a virtual machine that runs as a Chrome app.
 
 ![Screenshot of a Computron 680 editing this readme file](https://cdn.rawgit.com/benchristel/computron-680/22b593cf/screenshot.png)
 
-Its features include:
+## Why?
 
-- An intuitive, text-based display that allows you to view information using the Latin alphabet you already know and love.
-- Integration with modern input devices such as the QWERTY keyboard.
-- Native execution of the JavaScript instruction set.
-- Full support for any supported host operating system.
+No one knows for sure why I'm spending my time on this, but leading scientists have proposed several hypotheses which are under active investigation:
+
+- I'm a control freak and long for a programming environment whose every aspect is subject to my [steady needle](https://xkcd.com/378/) and scrutinous gaze.
+- I want to write and run JavaScript on a Chromebook, and a working Computron 680 will make that dream possible. (Why a Chromebook? I'm too cheap to buy a real laptop, but I like the idea of carrying around a programming environment with me because then everyone around me can see how ridiculously productive and antisocial I am.)
+- I'm some kind of [Retrofuturist](https://en.wikipedia.org/wiki/Retrofuturism). I fall asleep to the sound of HDDs seeking. I dream of owning a [Model M](https://en.wikipedia.org/wiki/Model_M_keyboard). And I miss those monochrome search terminals they used to have at the library! But at the same time, I want to expand on the promise of all of those cool things with, well, JavaScript.
+- I dislike the proliferation of [the Internet](https://en.wikipedia.org/wiki/Internet) (though I like [The Internet](http://www.npr.org/2015/08/16/432216332/a-band-called-the-internet-preaching-ego-death)) and dream of a world in which I exchange computer programs with people by going to their house and swapping thumb drives or [other portable media](https://en.wikipedia.org/wiki/Floppy_disk).
+- I object to the assumption that average consumers of technology must live near the (perpetually updating) bleeding edge as we technologists push the envelope of what's possible. I'd really prefer the software I rely on to be well within the bounds of what we know how to do, and I suspect others do too.
 
 ## What? How is this different from a webpage?
 
