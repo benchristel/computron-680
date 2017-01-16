@@ -6,7 +6,7 @@ The Computron 680 is a virtual machine that runs as a Chrome app.
 
 ## Why?
 
-No one knows for sure why I'm spending my time on this, but leading scientists have proposed several hypotheses which are under active investigation:
+As with many of my behaviors, there is no one big reason I'm working on this; rather, there are lots of little reasons.
 
 - I'm a control freak and long for a programming environment whose every aspect is subject to my [steady needle](https://xkcd.com/378/) and scrutinous gaze.
 - I want to write and run JavaScript on a Chromebook, and a working Computron 680 will make that dream possible. (Why a Chromebook? I'm too cheap to buy a real laptop, but I like the idea of carrying around a programming environment with me because then everyone around me can see how ridiculously productive and antisocial I am.)
@@ -14,17 +14,11 @@ No one knows for sure why I'm spending my time on this, but leading scientists h
 - I dislike the proliferation of [the Internet](https://en.wikipedia.org/wiki/Internet) (though I like [The Internet](http://www.npr.org/2015/08/16/432216332/a-band-called-the-internet-preaching-ego-death)) and dream of a world in which I exchange computer programs with people by going to their house and swapping thumb drives or [other portable media](https://en.wikipedia.org/wiki/Floppy_disk).
 - I object to the assumption that average consumers of technology must live near the (perpetually updating) bleeding edge as we technologists push the envelope of what's possible. I'd really prefer the software I rely on to be well within the bounds of what we know how to do, and I suspect others do too.
 
-## What? How is this different from a webpage?
+## Do you actually expect people to use this?
 
-It's *very* close to just being a webpage.
-But because it's a Chrome app,
-it can access the filesystem on the host machine,
-which webpages can't do.
-This means that it can read and write code and documents stored on your
-computer,
-and you can program it to do just about anything.
+No.
 
-## Usage
+## Installation
 
 1. Clone this repo.
 1. Ensure you have [NodeJS](https://nodejs.org/) and [NPM](https://www.npmjs.com/) installed.
@@ -38,7 +32,7 @@ and you can program it to do just about anything.
    Choose the `computron-680` repo folder.
    (See the explanation of boot directories below to understand why.)
 
-## Boot Directories
+### Boot Directories
 
 The whole point of a Computron is that you can program it to do anything.
 The flip side of this is that when a Computron first starts up,
