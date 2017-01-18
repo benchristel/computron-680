@@ -8,22 +8,7 @@ inject('motherboard', function($) {
 
   __scriptRunnerUtil__.boot = function(event) {
     if (event.data.type !== 'boot') return
-
-    var varsToCloak = [
-      '$',
-      'window',
-      'API',
-      '__scriptRunnerUtil__',
-      'event',
-      'varsToCloak',
-      'inject'
-    ].concat(Object.keys(window))
-
-    // intentionally exposed to the eval'd script.
-    var C680 = API(event.source)
-
-    eval(__scriptRunnerUtil__.cloakVars(event.data.script, varsToCloak))
-
+    $.bootFromJsString(event.data.script, API(event.source))
     // ensure we only boot once
     window.removeEventListener('message', __scriptRunnerUtil__.boot)
   }
