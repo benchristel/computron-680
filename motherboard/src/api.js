@@ -2,6 +2,8 @@
 
 inject('API', function($) {
   var window = $.window
+  var type   = $.Events.type
+  var EventTypes = $.EventTypes
 
   return function(peripherals) {
     var api = {}
@@ -9,7 +11,7 @@ inject('API', function($) {
 
     api.render = function(lines) {
       peripherals.postMessage({
-        type: 'render',
+        type: EventTypes.RENDER,
         lines: lines
       }, '*')
     }
@@ -21,7 +23,7 @@ inject('API', function($) {
 
     api.readFile = function(filename, callback) {
       peripherals.postMessage({
-        type: 'readFile',
+        type: EventTypes.READ_FILE,
         filename: filename
       }, '*')
 
@@ -30,7 +32,7 @@ inject('API', function($) {
 
     api.writeFile = function(filename, content) {
       peripherals.postMessage({
-        type: 'writeFile',
+        type: EventTypes.WRITE_FILE,
         filename: filename,
         content: content
       }, '*')
@@ -49,11 +51,11 @@ inject('API', function($) {
     }
 
     window.addEventListener('message', function(event) {
-      switch (event.data.type) {
-        case 'keydown':
+      switch (type(event)) {
+        case EventTypes.KEY_DOWN:
           handleKeyPress(event)
           break
-        case 'fileReadComplete':
+        case EventTypes.FILE_READ_COMPLETE:
           handleFileReadComplete(event)
           break
       }

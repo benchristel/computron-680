@@ -1,7 +1,7 @@
 inject('keyboard', function($) {
   $.window.addEventListener('keydown', function(event) {
     motherboard.contentWindow.postMessage({
-      type: 'keydown',
+      type: $.EventTypes.KEY_DOWN,
       key: event.key
     }, '*')
   })

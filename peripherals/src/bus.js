@@ -2,6 +2,8 @@ inject('bus', function($) {
   var HDD = $.HDD
   var Terminal = $.Terminal
   var Bus = {}
+  var EventTypes = $.EventTypes
+  var type = $.Events.type
 
   var motherboard = document.getElementById('motherboard')
 
@@ -12,22 +14,22 @@ inject('bus', function($) {
     // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
     if (event.source !== motherboard.contentWindow) return
 
-    switch (event.data.type) {
-      case 'readFile':
+    switch (type(event)) {
+      case EventTypes.READ_FILE:
         HDD.read(event.data.filename, function(err, content) {
           if (err) return // TODO: you can do better than this
 
           event.source.postMessage({
-            type: 'fileReadComplete',
+            type: EventTypes.FILE_READ_COMPLETE,
             filename: event.data.filename,
             content: content
           }, '*')
         })
         break
-      case 'writeFile':
+      case EventTypes.WRITE_FILE:
         HDD.write(event.data.filename, event.data.content)
         break
-      case 'render':
+      case EventTypes.RENDER:
         Terminal.render(event.data.lines)
         break
     }

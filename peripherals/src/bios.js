@@ -2,6 +2,7 @@ inject('bios', function($) {
   var window = $.window
   var HDD = $.HDD
   var Terminal = $.Terminal
+  var BOOT = $.EventTypes.BOOT
 
   var motherboard = document.getElementById('motherboard')
 
@@ -11,6 +12,9 @@ inject('bios', function($) {
       return
     }
 
-    motherboard.contentWindow.postMessage({type: 'boot', script: code}, '*')
+    motherboard.contentWindow.postMessage({
+      type: BOOT,
+      script: code
+    }, '*')
   })
 })
