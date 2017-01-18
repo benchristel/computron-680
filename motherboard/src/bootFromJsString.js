@@ -1,4 +1,6 @@
 inject('bootFromJsString', function($) {
+  "use strict";
+
   var window = $.window
 
   return function bootFromJsString(js, C680) {
