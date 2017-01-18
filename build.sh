@@ -11,6 +11,7 @@ for module in motherboard peripherals; do
   cat \
     poppins.js \
     injector.js \
+    $(find "shared/src" -name '*.js') \
     $(find "${module}/src" -name '*.js') \
   > "${module}/dist/all.js"
 
@@ -21,10 +22,3 @@ for module in motherboard peripherals; do
 
   jasmine "${module}/.build-tmp/test.js"
 done
-
-
-cat \
-  poppins.js \
-  injector.js \
-  $(find peripherals/src -name '*.js') \
-> peripherals/dist/all.js
