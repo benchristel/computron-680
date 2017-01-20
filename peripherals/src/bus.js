@@ -1,10 +1,10 @@
 inject('bus', function($) {
   var HDD = $.HDD
   var display = $.display
-  var Bus = {}
   var EventTypes = $.EventTypes
   var type = $.Events.type
   var motherboardWindow = $.motherboardWindow
+  var postMessage = $.postMessage
 
   window.addEventListener('message', function(event) {
     // To avoid a security hole, we always check the source
@@ -18,11 +18,12 @@ inject('bus', function($) {
         HDD.read(event.data.filename, function(err, content) {
           if (err) return // TODO: you can do better than this
 
-          event.source.postMessage({
-            type: EventTypes.FILE_READ_COMPLETE,
-            filename: event.data.filename,
-            content: content
-          }, '*')
+          postMessage(motherboardWindow)(
+            EventTypes.FILE_READ_COMPLETE,
+            {
+              filename: event.data.filename,
+              content: content
+            })
         })
         break
       case EventTypes.WRITE_FILE:

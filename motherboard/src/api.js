@@ -4,16 +4,17 @@ inject('API', function($) {
   var window = $.window
   var type   = $.Events.type
   var EventTypes = $.EventTypes
+  var postMessage = $.postMessage
 
   return function(peripherals) {
     var api = {}
     var fileCallbacks = {}
+    var postToPeripherals = postMessage(peripherals)
 
     api.render = function(lines) {
-      peripherals.postMessage({
-        type: EventTypes.RENDER,
+      postToPeripherals(EventTypes.RENDER, {
         lines: lines
-      }, '*')
+      })
     }
 
     api.setInterval = window.setInterval.bind(window)
@@ -22,20 +23,18 @@ inject('API', function($) {
     api.onKeyPress = function() {}
 
     api.readFile = function(filename, callback) {
-      peripherals.postMessage({
-        type: EventTypes.READ_FILE,
+      postToPeripherals(EventTypes.READ_FILE, {
         filename: filename
-      }, '*')
+      })
 
       fileCallbacks[filename] = callback
     }
 
     api.writeFile = function(filename, content) {
-      peripherals.postMessage({
-        type: EventTypes.WRITE_FILE,
+      postToPeripherals(EventTypes.WRITE_FILE, {
         filename: filename,
         content: content
-      }, '*')
+      })
     }
 
     function handleKeyPress(event) {
