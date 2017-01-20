@@ -4,15 +4,14 @@ inject('bus', function($) {
   var Bus = {}
   var EventTypes = $.EventTypes
   var type = $.Events.type
-
-  var motherboard = document.getElementById('motherboard')
+  var motherboardWindow = $.motherboardWindow
 
   window.addEventListener('message', function(event) {
     // To avoid a security hole, we always check the source
     // of the event before reacting. Malicious pages can
     // send events to any window at any time!
     // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
-    if (event.source !== motherboard.contentWindow) return
+    if (event.source !== motherboardWindow) return
 
     switch (type(event)) {
       case EventTypes.READ_FILE:
