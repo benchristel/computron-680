@@ -1,6 +1,6 @@
 inject('bus', function($) {
   var HDD = $.HDD
-  var Terminal = $.Terminal
+  var display = $.display
   var Bus = {}
   var EventTypes = $.EventTypes
   var type = $.Events.type
@@ -30,7 +30,7 @@ inject('bus', function($) {
         HDD.write(event.data.filename, event.data.content)
         break
       case EventTypes.RENDER:
-        Terminal.render(event.data.lines)
+        display(event.data.lines)
         break
     }
   })
