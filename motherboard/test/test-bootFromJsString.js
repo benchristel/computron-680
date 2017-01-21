@@ -32,6 +32,20 @@ describe('bootFromJsString', function() {
     }).toThrow()
   })
 
+  it('displays an error thrown by boot.js', function() {
+    var C680 = {
+      render: jasmine.createSpy('render')
+    }
+    var bootFromJsString = inject({window: fakeWindow()}).bootFromJsString
+
+    bootFromJsString('throw "foobar"', C680)
+
+    expect(C680.render).toHaveBeenCalledWith([
+      'There was a problem running the boot.js file you selected:',
+      '    foobar'
+    ])
+  })
+
   xit('allows access to Object', function() {
     expect(function() {
       var C680 = {}
