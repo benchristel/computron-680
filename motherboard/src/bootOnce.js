@@ -1,4 +1,4 @@
-inject('motherboard', function($) {
+inject('bootOnce', function($) {
   var window           = $.window
   var API              = $.API
   var is               = $.Events.is
@@ -7,11 +7,7 @@ inject('motherboard', function($) {
 
   var bootedAlready = false
 
-  return {
-    boot: boot
-  }
-
-  function boot(event) {
+  return function(event) {
     if (bootedAlready) return
     if (!is(BOOT, event)) return
 
