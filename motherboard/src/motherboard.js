@@ -5,12 +5,17 @@ inject('motherboard', function($) {
   var BOOT             = $.EventTypes.BOOT
   var bootFromJsString = $.bootFromJsString
 
-  function boot(event) {
-    if (!is(BOOT, event)) return
-    bootFromJsString(event.data.script, API(event.source))
-    // ensure we only boot once
-    window.removeEventListener('message', boot)
+  var bootedAlready = false
+
+  return {
+    boot: boot
   }
 
-  window.addEventListener('message', boot)
+  function boot(event) {
+    if (bootedAlready) return
+    if (!is(BOOT, event)) return
+
+    bootFromJsString(event.data.script, API(event.source))
+    bootedAlready = true
+  }
 })
