@@ -1,6 +1,4 @@
 inject('bootOnce', function($) {
-  var window           = $.window
-  var API              = $.API
   var is               = $.Events.is
   var BOOT             = $.EventTypes.BOOT
   var bootFromJsString = $.bootFromJsString
@@ -11,7 +9,7 @@ inject('bootOnce', function($) {
     if (bootedAlready) return
     if (!is(BOOT, event)) return
 
-    bootFromJsString(event.data.script, API(event.source))
+    bootFromJsString(event.data.script)
     bootedAlready = true
   }
 })

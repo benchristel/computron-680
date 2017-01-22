@@ -1,15 +1,17 @@
 ;(function() {
   var $ = null
 
-  function init() {
+  function init(peripheralsWindow) {
     if (!$) {
-      $ = inject()
+      $ = inject({
+        peripheralsWindow: peripheralsWindow
+      })
     }
 
     return $
   }
 
   window.addEventListener('message', function(event) {
-    init().dispatchMessage(event)
+    init(event.source).dispatchMessage(event)
   })
 })();

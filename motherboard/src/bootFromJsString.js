@@ -2,8 +2,9 @@ inject('bootFromJsString', function($) {
   "use strict";
 
   var window = $.window
+  var C680 = $.API
 
-  return function bootFromJsString(js, C680) {
+  return function bootFromJsString(js) {
     var Object = window.Object
     var scriptWithCloakedVars = $.cloakVars(js, [
       'Poppins',
