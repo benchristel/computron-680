@@ -1,17 +1,12 @@
 describe('bootFromJsString', function() {
-  function fakeWindow() {
-    return {
-      Object: Object,
-      console: {log: function() {}},
-      alert: function() {}
-    }
-  }
-
   function getBootFromJsString(C680) {
     return inject({
-      window: fakeWindow(),
-      peripheralsWindow: null,
-      API: C680
+      API: C680,
+      window: {
+        Object: Object,
+        console: {log: function() {}},
+        alert: function() {}
+      }
     }).bootFromJsString
   }
 

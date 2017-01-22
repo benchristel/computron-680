@@ -1,15 +1,12 @@
 // this file contains the API functions that are exposed to boot.js.
 
 inject('API', function($) {
-  var type   = $.Events.type
-  var EventTypes = $.EventTypes
-  var postMessage = $.postMessage
-  var messageBus  = $.messageBus
-  var peripherals = $.peripheralsWindow
+  var EventTypes        = $.EventTypes
+  var messageBus        = $.messageBus
+  var postToPeripherals = $.postToPeripherals
 
   var api = {}
   var fileCallbacks = {}
-  var postToPeripherals = postMessage(peripherals)
 
   api.render = function(lines) {
     postToPeripherals(EventTypes.RENDER, {
