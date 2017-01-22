@@ -5,10 +5,11 @@
     if (!$) {
       $ = inject()
     }
+
+    return $
   }
 
   window.addEventListener('message', function(event) {
-    init()
-    $.motherboard.boot(event)
+    init().motherboard.boot(event)
   })
 })();
