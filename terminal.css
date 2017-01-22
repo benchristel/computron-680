@@ -6,8 +6,9 @@ body {
 #case {
   display: table; /* element's width stretches to contain its contents */
   background-color: #aa9;
-  padding: 30px;
+  padding: 30px 30px 72px 30px;
 
+  margin-top: 12px;
   margin-left: auto;
   margin-right: auto;
 
@@ -29,8 +30,8 @@ body {
   padding: 10px;
 
   box-sizing: border-box;
-  width: 680px;
-  height: 680px;
+  width: 612px;
+  height: 612px;
 
   color: #00e800;
   background-image:
@@ -42,10 +43,10 @@ body {
 #terminal > p {
   margin: 0;
   padding: 0;
-  height: 20px;
+  height: 18.35px;
 
   font-family: Menlo, Monaco, monospace;
-  font-size: 17px;
+  font-size: 15.17px;
   white-space: pre;
 }
 
