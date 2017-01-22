@@ -6,7 +6,7 @@ describe('The API exposed to the OS', function() {
     var EventTypes = $.EventTypes
 
     var key = null
-    API.onKeyPress(function(_key) {
+    API.onKeyDown(function(_key) {
       key = _key
     })
 

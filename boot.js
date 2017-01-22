@@ -55,7 +55,7 @@ C680.readFile(fileToEdit, function(content) {
   redraw()
 })
 
-C680.onKeyPress(function(key) {
+C680.onKeyDown(function(key) {
   if (mode === 'normal') {
     handleKeypressInNormalMode(key)
   } else {
