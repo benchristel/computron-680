@@ -1,10 +1,10 @@
 // this file contains the API functions that are exposed to boot.js.
 
 inject('API', function($) {
-  var window = $.window
   var type   = $.Events.type
   var EventTypes = $.EventTypes
   var postMessage = $.postMessage
+  var messageBus  = $.messageBus
 
   return function(peripherals) {
     var api = {}
@@ -16,9 +16,6 @@ inject('API', function($) {
         lines: lines
       })
     }
-
-    api.setInterval = window.setInterval.bind(window)
-    api.console     = window.console
 
     api.onKeyPress = function() {}
 
@@ -49,16 +46,8 @@ inject('API', function($) {
       }
     }
 
-    window.addEventListener('message', function(event) {
-      switch (type(event)) {
-        case EventTypes.KEY_DOWN:
-          handleKeyPress(event)
-          break
-        case EventTypes.FILE_READ_COMPLETE:
-          handleFileReadComplete(event)
-          break
-      }
-    })
+    messageBus.subscribe(EventTypes.KEY_DOWN, handleKeyPress)
+    messageBus.subscribe(EventTypes.FILE_READ_COMPLETE, handleFileReadComplete)
 
     return api
   }
