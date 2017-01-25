@@ -1,3 +1,51 @@
+@font-face {
+  font-family: DejaVuMono;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  src: url('fonts/DejaVuSansMono.ttf');
+}
+
+@font-face {
+  font-family: DejaVuMono;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  src: url('fonts/DejaVuSansMono-Bold.ttf');
+}
+
+@font-face {
+  font-family: DejaVuMono;
+  font-weight: normal;
+  font-style: oblique;
+  font-stretch: normal;
+  src: url('fonts/DejaVuSansMono-Oblique.ttf');
+}
+
+@font-face {
+  font-family: DejaVuMono;
+  font-weight: normal;
+  font-style: italic;
+  font-stretch: normal;
+  src: url('fonts/DejaVuSansMono-Oblique.ttf');
+}
+
+@font-face {
+  font-family: DejaVuMono;
+  font-weight: bold;
+  font-style: oblique;
+  font-stretch: normal;
+  src: url('fonts/DejaVuSansMono-BoldOblique.ttf');
+}
+
+@font-face {
+  font-family: DejaVuMono;
+  font-weight: bold;
+  font-style: italic;
+  font-stretch: normal;
+  src: url('fonts/DejaVuSansMono-BoldOblique.ttf');
+}
+
 body {
   margin: 0;
   background-color: #543;
@@ -34,6 +82,7 @@ body {
   height: 612px;
 
   color: #00e800;
+  background: black;
   background-image:
     radial-gradient(ellipse at 33% 10%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.01) 50%),
     radial-gradient(circle at 50% -120%, #202020 0%, #282a28 50%, #202220 88%, #181a18 92%, #181a18 100%);
@@ -46,7 +95,7 @@ body {
   padding: 0;
   height: 18.35px;
 
-  font-family: Menlo, Monaco, monospace;
+  font-family: DejaVuMono;
   font-size: 15.17px;
   white-space: pre;
 }
