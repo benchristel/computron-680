@@ -6,18 +6,9 @@ If you're not familiar with the idea of a virtual machine: the Computron 680 is 
 
 ![Screenshot of a Computron 680 editing this readme file](https://cdn.rawgit.com/benchristel/computron-680/f201cb4a/screenshot.png)
 
-## Why?
+## What's it for?
 
-There is no one big reason I'm working on this; rather, there are lots of little reasons that add up to a big reason.
-
-- I'm a control freak and long for a programming environment whose every aspect is subject to my meddling fingers and scrutinous gaze.
-- I want to write and run JavaScript on a Chromebook, and a working Computron 680 will make that dream possible. (Why a Chromebook? I'm too cheap to buy a real laptop, but I like the idea of carrying around a programming environment with me because then everyone around me can see how ridiculously productive and antisocial I am.)
-- I dislike the pervasiveness of [the Internet](https://en.wikipedia.org/wiki/Internet) (though I like [The Internet](http://www.npr.org/2015/08/16/432216332/a-band-called-the-internet-preaching-ego-death)) and dream of a world in which I exchange computer programs with people by going to their house and swapping thumb drives or [other portable media](https://en.wikipedia.org/wiki/Floppy_disk).
-- I object to the assumption that average consumers of technology must live near the (perpetually updating) bleeding edge as we technologists push the envelope of what's possible. I'd really prefer the software I rely on to be stable and well within the bounds of what we know how to do, and I suspect others do too. Although the Computron _per se_ is neither stable nor usable, it presents itself as an artifact of a hypothetical alternative culture in which we give up features for stability. I guess that makes it an art project?
-
-## Do you actually expect people to use this?
-
-No.
+The Computron 680 doesn't do much by itself—you'll need an operating system, or at least a program for it to run. Its intended purpose is to run the BadOS operating system.
 
 ## Installation
 
