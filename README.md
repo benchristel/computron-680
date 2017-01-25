@@ -4,7 +4,7 @@ The Computron 680 is a virtual personal computer, available as a Chrome App.
 
 If you're not familiar with the idea of a virtual machine: the Computron 680 is a first-person video game in which your character does nothing but interact with a computer.
 
-![Screenshot of a Computron 680 editing this readme file](https://cdn.rawgit.com/benchristel/computron-680/22b593cf/screenshot.png)
+![Screenshot of a Computron 680 editing this readme file](https://cdn.rawgit.com/benchristel/computron-680/f201cb4a/screenshot.png)
 
 ## Why?
 
