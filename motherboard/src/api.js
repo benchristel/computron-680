@@ -4,6 +4,7 @@ inject('API', function($) {
   var EventTypes        = $.EventTypes
   var messageBus        = $.messageBus
   var postToPeripherals = $.postToPeripherals
+  var window            = $.window
 
   var api = {}
   var fileCallbacks = {}
@@ -38,6 +39,8 @@ inject('API', function($) {
       content: content
     })
   }
+
+  api.eval = window.eval
 
   function handleKeyDown(event) {
     keyDownCallback(event.data.keyCode)
