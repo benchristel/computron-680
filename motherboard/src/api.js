@@ -8,6 +8,7 @@ inject('API', function($) {
   var api = {}
   var fileCallbacks = {}
   var keyDownCallback = function() {}
+  var keyUpCallback = function() {}
 
   api.render = function(lines) {
     postToPeripherals(EventTypes.RENDER, {
@@ -17,6 +18,10 @@ inject('API', function($) {
 
   api.onKeyDown = function(callback) {
     keyDownCallback = callback
+  }
+
+  api.onKeyUp = function(callback) {
+    keyUpCallback = callback
   }
 
   api.readFile = function(filename, callback) {
@@ -35,7 +40,11 @@ inject('API', function($) {
   }
 
   function handleKeyDown(event) {
-    keyDownCallback(event.data.key)
+    keyDownCallback(event.data.keyCode)
+  }
+
+  function handleKeyUp(event) {
+    keyUpCallback(event.data.keyCode)
   }
 
   function handleFileReadComplete(event) {
@@ -47,6 +56,7 @@ inject('API', function($) {
   }
 
   messageBus.subscribe(EventTypes.KEY_DOWN, handleKeyDown)
+  messageBus.subscribe(EventTypes.KEY_UP, handleKeyUp)
   messageBus.subscribe(EventTypes.FILE_READ_COMPLETE, handleFileReadComplete)
 
   return api

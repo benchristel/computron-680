@@ -6,5 +6,7 @@ window.addEventListener('load', function() {
   })
   $.bios
   $.bus
-  $.keyboard
+
+  window.addEventListener('keydown', $.keyboardPort.handleKeyDown)
+  window.addEventListener('keyup', $.keyboardPort.handleKeyUp)
 });
