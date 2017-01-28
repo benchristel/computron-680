@@ -51,9 +51,16 @@ inject('API', function($) {
   }
 
   function handleFileReadComplete(event) {
-    var filename = event.data.filename
+    resolveFileCallback(event.data.filename, null, event.data.content)
+  }
+
+  function handleFileReadError(event) {
+    resolveFileCallback(event.data.filename, event.data.error, null)
+  }
+
+  function resolveFileCallback(filename, err, content) {
     if (fileCallbacks[filename]) {
-      fileCallbacks[filename](event.data.content)
+      fileCallbacks[filename](err, content)
       delete fileCallbacks[filename]
     }
   }
@@ -61,6 +68,7 @@ inject('API', function($) {
   messageBus.subscribe(EventTypes.KEY_DOWN, handleKeyDown)
   messageBus.subscribe(EventTypes.KEY_UP, handleKeyUp)
   messageBus.subscribe(EventTypes.FILE_READ_COMPLETE, handleFileReadComplete)
+  messageBus.subscribe(EventTypes.FILE_READ_ERROR, handleFileReadError)
 
   return api
 })
