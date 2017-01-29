@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Computron 680",
-  "version": "0.0.0",
+  "version": "0.0.1",
 
   "icons": {
     "128": "icon_128.png"
